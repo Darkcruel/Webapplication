@@ -10,7 +10,7 @@
 
 	<body>
 		<h1>My Music Page</h1>
-		
+
 		<!-- Ex 1: Number of Songs (Variables) -->
 		<?php
 		$song_count = 5678;
@@ -22,17 +22,44 @@
 		</p>
 
 		<!-- Ex 2: Top Music News (Loops) -->
-		<!-- Ex 3: Query Variable -->
 		<div class="section">
 			<h2>Billboard News</h2>
-		
 			<ol>
-				<?php $news_pages = 5 ?>
-			    <?php for($i = 11;$i >11-$news_pages; $i--) { ?>
+				<?php $news_pages=5 ?>
+				<?php for($i = 11;$i >=($news_pages+2); $i--) { ?>
 					<li><a href="https://www.billboard.com/archive/article/2019<?= sprintf('%02d',$i) ?>"> 2019-<?= sprintf('%02d',$i) ?> </a></li>
 				<?php } ?>
 			</ol>
 		</div>
+		<!-- Ex 3: Query Variable -->
+		<div class="section">
+         <h2>Billboard News</h2>
+         <ol>
+         <?php
+
+         if (isset($_GET["newspages"]))
+         {
+            $newspages =  $_GET["newspages"];
+         }
+         else
+         {
+            $newspages = 5;
+         }
+         for ($i = 11; $i > 11 - $newspages ; $i--) {
+            $news_pages = $i;
+            if($i < 10)
+            {
+               $news_pages = "0" . $news_pages; ?>
+               <li><a href="https://www.billboard.com/archive/article/2019<?= $news_pages?>">2019- <?= $news_pages ?> </a></li>
+            <?php }
+            else
+            {
+               $news_pages = $i; ?>
+               <li><a href="https://www.billboard.com/archive/article/2019<?= $news_pages?>">2019- <?= $news_pages ?> </a></li>
+            <?php }
+         } ?>
+      </ol>
+      </div>
 
 		<!-- Ex 4: Favorite Artists (Arrays) -->
 		<?php $singers = array("Gun N's Roses","Green Day","Blink182","J.fla") ?>
@@ -48,43 +75,38 @@
 		<!-- Ex 5: Favorite Artists from a File (Files) -->
 		<div class="section">
 			<h2>My Favorite Artists</h2>
-			
+
 			<?php $lines = file("favorite.txt") ?>
 
 			<ol>
 				<?php foreach ($lines as $line){ ?>
 					<li><a href="http://en.wikipedia.org/wiki/<?= $line?>"><?= $line ?></a></li>
-			<?php } ?>		
+			<?php } ?>
 			</ol>
 		</div>
-		
+
 		<!-- Ex 6: Music (Multiple Files) -->
 		<!-- Ex 7: MP3 Formatting -->
 		<div class="section">
 			<h2>My Music and Playlists</h2>
 
 			<ul id="musiclist">
-				<li class="mp3item">
-					<a href="lab5/musicPHP/songs/paradise-city.mp3">paradise-city.mp3</a>
-				</li>
-				
-				<li class="mp3item">
-					<a href="lab5/musicPHP/songs/basket-case.mp3">basket-case.mp3</a>
-				</li>
-
-				<li class="mp3item">
-					<a href="lab5/musicPHP/songs/all-the-small-things.mp3">all-the-small-things.mp3</a>
-				</li>
-
+				<?php foreach (glob("lab5/musicPHP/songs/*.mp3") as $filename ) { ?>
+					<li class="mp3item"><a href="<?= $filename ?>"><?php echo basename($filename)?></a> <?php echo" (".(int)(filesize($filename)/1024)." KB)" ?></li>
+				<?php } ?>
 				<!-- Exercise 8: Playlists (Files) -->
-				<li class="playlistitem">326-13f-mix.m3u:
+				<?php foreach (glob("lab5/musicPHP/songs/*.m3u") as $filename) { ?>
+					<li class="playlistitem"><?= basename($filename) ?></li>
 					<ul>
-						<li>Basket Case.mp3</li>
-						<li>All the Small Things.mp3</li>
-						<li>Just the Way You Are.mp3</li>
-						<li>Pradise City.mp3</li>
-						<li>Dreams.mp3</li>
+					<?php foreach(file("$filename") as $line){
+						$pos = strpos($line,"#");
+						if ($pos === false){ ?>
+							<li><?= $line ?></li>
+							<?php } ?>
+					<?php }?>
 					</ul>
+				<?php } ?>
+				</ul>
 			</ul>
 		</div>
 
