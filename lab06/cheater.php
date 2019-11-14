@@ -34,12 +34,12 @@
 	} elseif (!preg_match("/[0-9]{16}/",$_POST["card_num"])) {
 		?>
 			<h1>Sorry</h1>
-			<p>You didn't provide a valid credit card number. Try again?</p>
+			<p>You didn't provide a valid credit card number. <a href ="gradestore.html">Try again?</a></p>
 		<?php
 	} elseif(($_POST["card"] == "visa" and !preg_match("/^4/",$_POST["card_num"])) or ($_POST["card"] == "mastercard" and !preg_match("/^5/",$_POST["card_num"]))){
 		?>
 		<h1>Sorry</h1>
-		<p>You didn't provide a valid credit card number. Try again?</p>
+		<p>You didn't provide a valid credit card number. <a href ="gradestore.html">Try again?</a></p>
 		<?php
 	} else{
 		?>
